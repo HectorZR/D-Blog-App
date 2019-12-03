@@ -14,9 +14,6 @@ library Utils {
         );
     }
     function toString(uint _i) internal pure returns (string memory _uintAsString) {
-        if (_i == 0) {
-            return "0";
-        }
         uint j = _i;
         uint len;
         while (j != 0) {

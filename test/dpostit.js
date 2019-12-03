@@ -12,7 +12,8 @@ contract("DPostit", accounts => {
 
     beforeEach(async () => dpostitIntance = await DPostit.new({from: firstAccount}))
 
-    it("saves a new post and return size", async () => {
+    // SavePost method tests
+    it("saves a new post", async () => {
         await dpostitIntance.savePost(name, description, url, { from: firstAccount });
     });
 
@@ -28,6 +29,7 @@ contract("DPostit", accounts => {
         await truffleAssert.reverts(dpostitIntance.savePost(name, description, '', { from: firstAccount }), "Url field is required");
     });
 
+    // GetPost method tests
     it("returns an error if post does not exist", async () => {
         await truffleAssert.reverts(dpostitIntance.getPost.call(1, { from: firstAccount }), "Post does not exist");
     });
@@ -37,6 +39,7 @@ contract("DPostit", accounts => {
         await dpostitIntance.getPost.call(1, { from: firstAccount });
     });
 
+    // ListPosts method tests
     it("returns a full posts list", async () => {
         for (let index = 0; index < 5; index++) {
             await dpostitIntance.savePost(name, description, url, { from: firstAccount });
@@ -44,6 +47,7 @@ contract("DPostit", accounts => {
         await dpostitIntance.listPosts.call({from: firstAccount});
     });
 
+    // DeletePost method tests
     it("lets contract owner deleting posts", async () => {
         await dpostitIntance.savePost(name, description, url, { from: secondAccount });
         await dpostitIntance.deletePost(1, {from: firstAccount});
@@ -58,6 +62,7 @@ contract("DPostit", accounts => {
         await truffleAssert.reverts(dpostitIntance.deletePost(1, {from: thirdAccount}), "You are not able to delete post");
     });
 
+    // PayForAccess method tests
     it("does not send coins if sender is equal to post's creator", async () => {
         await dpostitIntance.savePost(name, description, url, { from: secondAccount });
         await truffleAssert.reverts(dpostitIntance.payForAccess(1, {from: secondAccount, value: 1000000000}), "You can not donate to yourself!");
