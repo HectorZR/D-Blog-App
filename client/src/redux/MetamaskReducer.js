@@ -1,39 +1,37 @@
-import { actions } from './MetamaskActions';
+import { actions } from "./MetamaskActions";
 
 const initialState = {
     logged: false,
     metamaskExists: false,
     account: null,
-    metamask: null,
-}
+    metamask: null
+};
 
-const START = '_START';
-const SUCCESS = '_SUCCESS';
-const ERROR = '_ERROR';
+const START = "_START";
+const SUCCESS = "_SUCCESS";
+const ERROR = "_ERROR";
 
 function tagReducer(state = initialState, action = null) {
     switch (action.type) {
-        case actions.APP_LOGGED: 
+        case actions.APP_LOGGED:
             return {
-                ...state,
-            }
-        case actions.STORE_MAIN_ACCOUNT + START: 
+                ...state
+            };
+        case actions.STORE_MAIN_ACCOUNT + START:
             return state;
-        case actions.STORE_MAIN_ACCOUNT + SUCCESS: 
-            console.log(action)
+        case actions.STORE_MAIN_ACCOUNT + SUCCESS:
             return {
                 ...state,
                 action
-            }
+            };
         case actions.STORE_MAIN_ACCOUNT + ERROR:
             return state;
 
         case actions.SET_MAIN_ACCOUNT + START:
             return state;
-        case actions.SET_MAIN_ACCOUNT + SUCCESS: 
-            console.log(action)
+        case actions.SET_MAIN_ACCOUNT + SUCCESS:
             return state;
-        case actions.SET_MAIN_ACCOUNT + ERROR: 
+        case actions.SET_MAIN_ACCOUNT + ERROR:
             return state;
 
         case actions.EXISTS_METAMASK:
@@ -53,7 +51,6 @@ function tagReducer(state = initialState, action = null) {
         case actions.STORE_IPFS_INSTANCE + START:
             return state;
         case actions.STORE_IPFS_INSTANCE + SUCCESS:
-            // console.log(action.payload);
             window._ipfs = action.payload;
             return state;
         case actions.STORE_IPFS_INSTANCE + ERROR:

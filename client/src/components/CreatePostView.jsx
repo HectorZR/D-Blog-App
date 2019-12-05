@@ -21,11 +21,8 @@ export default class CreatePostView extends React.Component {
 
         if (name === "url") {
             value = event.target.files[0];
-            console.log(value);
         }
-        if (name !== "url") {
-            value = value.trim();
-        }
+
         this.setState({
             [name]: value
         });
@@ -43,23 +40,27 @@ export default class CreatePostView extends React.Component {
         });
 
         if (name && description && url) {
-            console.log(fileReader);
             fileReader.onload = async () => {
                 window._ipfs
                     .add(Buffer.from(fileReader.result))
                     .then(async result => {
                         try {
-                            console.log("entre en el try catch");
-                            console.log(result);
                             savePostToContract(
                                 contract.methods
-                                    .savePost(name, description, result[0].path)
+                                    .savePost(
+                                        name.trim(),
+                                        description.trim(),
+                                        result[0].path
+                                    )
                                     .send({
                                         from: account
                                     })
                             );
                         } catch (error) {
                             console.log(error);
+                            this.setState({
+                                error: "Unable to create post, try again"
+                            });
                         }
                     });
             };

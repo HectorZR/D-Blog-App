@@ -16,9 +16,19 @@ function tagReducer(state = initialState, action = null) {
         case actions.GET_POSTS + START:
             return state;
         case actions.GET_POSTS + SUCCESS:
+            const postslist = JSON.parse(action.payload);
+            const sortedPosts = postslist.sort((first, second) => {
+                if (first.key < second.key) {
+                    return 1;
+                }
+                if (first.key > second.key) {
+                    return -1;
+                }
+                return 0;
+            });
             return {
                 ...state,
-                posts: JSON.parse(action.payload)
+                posts: sortedPosts
             };
         case actions.GET_POSTS + ERROR:
             return {
@@ -30,7 +40,6 @@ function tagReducer(state = initialState, action = null) {
         case actions.SAVE_POST + START:
             return state;
         case actions.SAVE_POST + SUCCESS:
-            console.log(action);
             return {
                 ...state,
                 newPostIndex: action.payload
