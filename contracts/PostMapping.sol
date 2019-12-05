@@ -52,7 +52,7 @@ library PostMapping {
         key = self.keys[keyIndex].key;
         name = self.data[key].name;
         description = self.data[key].description;
-        url = self.data[key].description;
+        url = self.data[key].url;
         owner = self.data[key].owner;
     }
 

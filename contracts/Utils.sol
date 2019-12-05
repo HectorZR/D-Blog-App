@@ -4,12 +4,14 @@ library Utils {
     function getPostObject(
         uint key,
         string memory name,
-        string memory description
+        string memory description,
+        string memory url
     ) internal pure returns(string memory content) {
         content = string(abi.encodePacked(
             '{"key": ', '"', toString(key), '"',
             ', "name": ', '"', name, '"',
             ', "description": ', '"', description, '"',
+            ', "url": ', '"', url, '"',
             '}')
         );
     }

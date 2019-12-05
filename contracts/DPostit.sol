@@ -11,7 +11,9 @@ contract DPostit {
 
     address private contractOwner;
     uint private minGoal = 1000 wei;
-    mapping(address => uint[]) ownerPosts;
+    mapping(address => mapping(uint => bool)) validAddressesWhenPay;
+
+    event ReturnPostFileUrl(string);
 
     PostMapping.Post post;
     modifier isContractOwner() {
@@ -51,13 +53,15 @@ contract DPostit {
                 uint key,
                 string memory name,
                 string memory description,
-                ,
+                string memory url,
+                address payable owner
             ) = PostMapping.iterate_get(post, i);
 
+            bool validAddress = msg.sender == owner || validAddressesWhenPay[msg.sender][i];
             data = string(
                 abi.encodePacked(
                     data,
-                    Utils.getPostObject(key, name, description),
+                    Utils.getPostObject(key, name, description, validAddress ? url : ''),
                     (i == post.size) ? '' : ', '
                 )
             );
@@ -88,24 +92,42 @@ contract DPostit {
             uint key,
             string memory name,
             string memory description,
-            ,
+            string memory url,
+            address payable owner
         ) = PostMapping.iterate_get(post, postIndex);
 
-        return string(abi.encodePacked('"', Utils.getPostObject(key, name, description), "'"));
+        bool validAddress = msg.sender == owner || validAddressesWhenPay[msg.sender][postIndex];
+        return string(
+            abi.encodePacked(
+                Utils.getPostObject(
+                    key,
+                    name,
+                    description,
+                    validAddress ? url : ''
+                )
+            )
+        );
     }
 
-    function payForAccess(uint postIndex) public payable reachMinimumGoal() exists(postIndex) returns (string memory) {
+    function payForAccess(uint postIndex) public payable reachMinimumGoal() exists(postIndex) returns (bool) {
         (
-            ,
+            uint key,
             ,
             ,
             string memory url,
             address payable owner
         ) = PostMapping.iterate_get(post, postIndex);
-
+        
         require(owner != msg.sender, "You can not donate to yourself!");
+        
+        require(validAddressesWhenPay[msg.sender][key] == false, 'You already paid for this file');
+        
+        validAddressesWhenPay[msg.sender][key] = true;
+        
         owner.transfer(msg.value);
-        return string(abi.encodePacked('{"url":', '"', url, '"', '"}'));
+        
+        emit ReturnPostFileUrl(string(abi.encodePacked('{"url":', '"', url, '",', '"key" : ', '"', Utils.toString(key), '"}')));
+        return true;
     }
 
     function deletePost(uint postIndex) public isContractOwner() exists(postIndex) returns(bool){
