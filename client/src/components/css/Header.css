@@ -1,0 +1,12 @@
+.App {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-options {
+    display: flex;
+    width: 20%;
+    justify-content: space-around;
+}

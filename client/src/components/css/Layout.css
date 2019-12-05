@@ -1,0 +1,10 @@
+.layout {
+    padding: 50px;
+}
+
+.layout-container {
+    width: 50%;
+    margin: auto;
+    border: solid 1px #b1b1b1;
+    padding: 20px;
+}
