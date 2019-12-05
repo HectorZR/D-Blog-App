@@ -29,10 +29,11 @@ export default class CreatePostView extends React.Component {
     }
 
     savePost() {
-        const { account, savePostToContract, storePostWithFile } = this.props;
+        const { account, savePostToContract } = this.props;
         const { name, description, url } = this.state;
         if (!url) return;
 
+        console.log(account);
         let fileReader = new FileReader();
         const web3 = new Web3(window.web3.currentProvider);
         const contract = new web3.eth.Contract(ContractAbi, contractAddress, {
@@ -56,6 +57,11 @@ export default class CreatePostView extends React.Component {
                                         from: account
                                     })
                             );
+                            this.setState({
+                                name: "",
+                                description: "",
+                                url: ""
+                            });
                         } catch (error) {
                             console.log(error);
                             this.setState({
@@ -97,7 +103,7 @@ export default class CreatePostView extends React.Component {
                     <div>
                         <input
                             type="file"
-                            /* accept="" */ className="text-input"
+                            className="text-input"
                             name="url"
                             onChange={this.onChange}
                         />

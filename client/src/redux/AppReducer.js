@@ -2,9 +2,12 @@ import { actions } from "./AppActions";
 
 const initialState = {
     posts: [],
+    singlePost: {},
     newPostIndex: null,
+    unlockedLink: "",
     error: null,
-    errorMessage: null
+    errorMessage: null,
+    isLoading: false
 };
 
 const START = "_START";
@@ -55,6 +58,43 @@ function tagReducer(state = initialState, action = null) {
             return {
                 ...state,
                 [action.name]: action.value
+            };
+
+        case actions.SHOW_POST + START:
+            return {
+                ...state,
+                isLoading: true
+            };
+        case actions.SHOW_POST + SUCCESS:
+            return {
+                ...state,
+                singlePost: JSON.parse(action.payload),
+                isLoading: false
+            };
+        case actions.SHOW_POST + ERROR:
+            console.log(action);
+            return {
+                ...state,
+                isLoading: false,
+                singlePost: {
+                    name: "Post not found",
+                    description: "This post not exists"
+                }
+            };
+
+        case actions.PAY_FOR_GETTING_LINK + START:
+            return state;
+        case actions.PAY_FOR_GETTING_LINK + SUCCESS:
+            return {
+                ...state,
+                unlockedLink: JSON.parse(
+                    action.payload.events.ReturnPostFileUrl.returnValues[0]
+                )
+            };
+        case actions.PAY_FOR_GETTING_LINK + ERROR:
+            return {
+                ...state,
+                error: "Error getting file try again"
             };
         default:
             return state;

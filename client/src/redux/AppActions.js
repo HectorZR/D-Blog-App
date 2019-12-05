@@ -4,7 +4,9 @@ export const actions = {
     SAVE_POST: "SAVE_POST",
     EDIT_INPUT: "EDIT_INPUT",
     STORE_POST_WITH_FILE: "STORE_POST_WITH_FILE",
-    STORE_FILE: "STORE_FILE"
+    STORE_FILE: "STORE_FILE",
+    SHOW_POST: "SHOW_POST",
+    PAY_FOR_GETTING_LINK: "PAY_FOR_GETTING_LINK"
 };
 
 function getPostList(payload) {
@@ -29,6 +31,13 @@ function editInput(name, value) {
     };
 }
 
+function showPost(payload) {
+    return {
+        type: actions.SHOW_POST,
+        payload
+    };
+}
+
 function storePostWithFile(ipfsPayload, savePostPayload) {
     return dispatch =>
         dispatch({
@@ -38,6 +47,13 @@ function storePostWithFile(ipfsPayload, savePostPayload) {
                 return res;
             })
         });
+}
+
+function payForGettingLink(payload) {
+    return {
+        type: actions.PAY_FOR_GETTING_LINK,
+        payload
+    };
 }
 
 export function homeViewActions() {
@@ -51,5 +67,12 @@ export function createPostActions() {
         editInput,
         savePostToContract,
         storePostWithFile
+    };
+}
+
+export function postViewActions() {
+    return {
+        showPost,
+        payForGettingLink
     };
 }

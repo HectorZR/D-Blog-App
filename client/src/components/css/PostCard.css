@@ -1,0 +1,10 @@
+.post-card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom: 1px solid #b1b1b1;
+    margin-bottom: 10px;
+}
