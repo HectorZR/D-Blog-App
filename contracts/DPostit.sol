@@ -43,7 +43,7 @@ contract DPostit {
     }
 
     function listPosts() public view returns(string memory data) {
-        data = '"[';
+        data = '[';
         for(uint i = PostMapping.iterate_start(post);
         PostMapping.iterate_valid(post, i);
         i = PostMapping.iterate_next(post, i)) {
@@ -62,7 +62,7 @@ contract DPostit {
                 )
             );
         }
-        data = string(abi.encodePacked(data, ']"'));
+        data = string(abi.encodePacked(data, ']'));
     }
 
     function savePost(
