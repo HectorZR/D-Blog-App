@@ -145,14 +145,11 @@ contract("DPostit", accounts => {
             from: secondAccount
         });
         await truffleAssert.reverts(
-            dpostitIntance.payForAccess(
-                1,
-                {
-                    from: secondAccount,
-                    value: 10000000
-                },
-                "You already paid for this file"
-            )
+            dpostitIntance.payForAccess(1, {
+                from: secondAccount,
+                value: 10000000
+            }),
+            "You can not donate to yourself!"
         );
     });
 
@@ -164,9 +161,12 @@ contract("DPostit", accounts => {
             from: thirdAccount,
             value: 10000000
         });
-        await dpostitIntance.payForAccess(1, {
-            from: thirdAccount,
-            value: 10000000
-        });
+        await truffleAssert.reverts(
+            dpostitIntance.payForAccess(1, {
+                from: thirdAccount,
+                value: 10000000
+            }),
+            "You already paid for this file"
+        );
     });
 });
