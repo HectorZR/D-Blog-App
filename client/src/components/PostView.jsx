@@ -40,8 +40,9 @@ class PostView extends React.Component {
     }
 
     showSinglePost(id) {
-        const { showPost } = this.props;
-        showPost(this.DPostIt.methods.getPost(id).call());
+        const { showPost, account } = this.props;
+
+        showPost(this.DPostIt.methods.getPost(id).call({ from: account }));
     }
 
     onClick() {
@@ -69,16 +70,15 @@ class PostView extends React.Component {
         if (!/^([0-9]{1,18})/gm.test(value)) {
             return;
         }
+
         payForGettingLink(
-            this.DPostIt.methods
-                .payForAccess(id)
-                .send({ from: account, value: parseInt(value, 10) })
+            this.DPostIt.methods.payForAccess(id).send({ from: account, value })
         );
     }
 
     downloadFile() {
         const { url: hash } = this.props.singlePost;
-        console.log("Starting download");
+
         window._ipfs
             .get(hash)
             .then(files => {
@@ -88,9 +88,7 @@ class PostView extends React.Component {
                 const url = URL.createObjectURL(file);
                 const link = document.createElement("a");
                 link.href = url;
-                // link.download = "file-from-dpostit";
                 document.body.append(link);
-                console.log(link);
                 link.click();
                 link.remove();
             })
@@ -99,18 +97,18 @@ class PostView extends React.Component {
 
     render() {
         const { description, name, url } = this.props.singlePost;
-        const { isLoading } = this.props;
+        const { isLoadingShowPost, account } = this.props;
         const { startTransanction, value } = this.state;
         return (
             <Layout>
                 <div>
-                    {isLoading ? (
+                    <p>{name}</p>
+                    <p>{description}</p>
+
+                    {isLoadingShowPost ? (
                         <Loader />
                     ) : (
                         <React.Fragment>
-                            <p>{name}</p>
-                            <p>{description}</p>
-
                             {url ? (
                                 <button onClick={this.downloadFile}>
                                     Download link

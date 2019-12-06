@@ -7,7 +7,9 @@ const initialState = {
     unlockedLink: "",
     error: null,
     errorMessage: null,
-    isLoading: false
+    isLoading: false,
+    isLoadingSavePost: false,
+    isLoadingShowPost: false
 };
 
 const START = "_START";
@@ -41,17 +43,22 @@ function tagReducer(state = initialState, action = null) {
             };
 
         case actions.SAVE_POST + START:
-            return state;
+            return {
+                ...state,
+                isLoadingSavePost: true
+            };
         case actions.SAVE_POST + SUCCESS:
             return {
                 ...state,
-                newPostIndex: action.payload
+                newPostIndex: action.payload,
+                isLoadingSavePost: false
             };
         case actions.SAVE_POST + ERROR:
             return {
                 ...state,
                 error: true,
-                errorMessage: action.payload
+                errorMessage: action.payload,
+                isLoadingSavePost: false
             };
 
         case actions.EDIT_INPUT:
@@ -63,19 +70,18 @@ function tagReducer(state = initialState, action = null) {
         case actions.SHOW_POST + START:
             return {
                 ...state,
-                isLoading: true
+                isLoadingShowPost: true
             };
         case actions.SHOW_POST + SUCCESS:
             return {
                 ...state,
                 singlePost: JSON.parse(action.payload),
-                isLoading: false
+                isLoadingShowPost: false
             };
         case actions.SHOW_POST + ERROR:
-            console.log(action);
             return {
                 ...state,
-                isLoading: false,
+                isLoadingShowPost: false,
                 singlePost: {
                     name: "Post not found",
                     description: "This post not exists"
@@ -83,18 +89,27 @@ function tagReducer(state = initialState, action = null) {
             };
 
         case actions.PAY_FOR_GETTING_LINK + START:
-            return state;
-        case actions.PAY_FOR_GETTING_LINK + SUCCESS:
             return {
                 ...state,
-                unlockedLink: JSON.parse(
-                    action.payload.events.ReturnPostFileUrl.returnValues[0]
-                )
+                isLoadingShowPost: true
+            };
+        case actions.PAY_FOR_GETTING_LINK + SUCCESS:
+            const response = JSON.parse(
+                action.payload.events.ReturnPostFileUrl.returnValues[0]
+            );
+            return {
+                ...state,
+                singlePost: {
+                    ...state.singlePost,
+                    url: response.url
+                },
+                isLoadingShowPost: false
             };
         case actions.PAY_FOR_GETTING_LINK + ERROR:
             return {
                 ...state,
-                error: "Error getting file try again"
+                error: "Error getting file try again",
+                isLoadingShowPost: false
             };
         default:
             return state;

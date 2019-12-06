@@ -3,6 +3,7 @@ import { contractAddress, ContractAbi } from "../utils/DPostItAbi";
 import Web3 from "web3";
 import Layout from "./Layout";
 import "./css/CreatePost.css";
+import Loader from "./Loader";
 
 export default class CreatePostView extends React.Component {
     constructor() {
@@ -33,7 +34,6 @@ export default class CreatePostView extends React.Component {
         const { name, description, url } = this.state;
         if (!url) return;
 
-        console.log(account);
         let fileReader = new FileReader();
         const web3 = new Web3(window.web3.currentProvider);
         const contract = new web3.eth.Contract(ContractAbi, contractAddress, {
@@ -63,7 +63,6 @@ export default class CreatePostView extends React.Component {
                                 url: ""
                             });
                         } catch (error) {
-                            console.log(error);
                             this.setState({
                                 error: "Unable to create post, try again"
                             });
@@ -74,43 +73,51 @@ export default class CreatePostView extends React.Component {
         }
     }
     render() {
-        const { name, description, url } = this.state;
+        const { name, description } = this.state;
+        const { isLoadingSavePost } = this.props;
         return (
             <Layout>
                 <div className="create-post-container">
                     <p>Create a new Post!</p>
                     <p>You only have to pay for gas consuption</p>
-                    <div>
-                        <input
-                            type="text"
-                            className="text-input"
-                            placeholder="Put a title for your post"
-                            value={name}
-                            name="name"
-                            onChange={this.onChange}
-                        />
-                    </div>
-                    <div>
-                        <textarea
-                            type="text"
-                            className="text-input"
-                            placeholder="Add a description"
-                            value={description}
-                            name="description"
-                            onChange={this.onChange}
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="file"
-                            className="text-input"
-                            name="url"
-                            onChange={this.onChange}
-                        />
-                    </div>
-                    <button className="button" onClick={this.savePost}>
-                        Create Post
-                    </button>
+
+                    {isLoadingSavePost ? (
+                        <Loader />
+                    ) : (
+                        <React.Fragment>
+                            <div>
+                                <input
+                                    type="text"
+                                    className="text-input"
+                                    placeholder="Put a title for your post"
+                                    value={name}
+                                    name="name"
+                                    onChange={this.onChange}
+                                />
+                            </div>
+                            <div>
+                                <textarea
+                                    type="text"
+                                    className="text-input"
+                                    placeholder="Add a description"
+                                    value={description}
+                                    name="description"
+                                    onChange={this.onChange}
+                                />
+                            </div>
+                            <div>
+                                <input
+                                    type="file"
+                                    className="text-input"
+                                    name="url"
+                                    onChange={this.onChange}
+                                />
+                            </div>
+                            <button className="button" onClick={this.savePost}>
+                                Create Post
+                            </button>
+                        </React.Fragment>
+                    )}
                 </div>
             </Layout>
         );

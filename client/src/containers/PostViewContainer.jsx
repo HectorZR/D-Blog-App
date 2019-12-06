@@ -5,7 +5,7 @@ import { postViewActions } from "../redux/AppActions";
 export default connect(
     state => ({
         singlePost: state.AppReducer.singlePost,
-        isLoading: state.AppReducer.isLoading,
+        isLoadingShowPost: state.AppReducer.isLoadingShowPost,
         unlockedLink: state.AppReducer.unlockedLink,
         account: state.MetamaskReducer.account
     }),

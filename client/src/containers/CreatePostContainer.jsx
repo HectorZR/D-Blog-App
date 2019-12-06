@@ -8,7 +8,8 @@ export default connect(
         name: state.AppReducer.name,
         description: state.AppReducer.description,
         url: state.AppReducer.url,
-        account: state.MetamaskReducer.account
+        account: state.MetamaskReducer.account,
+        isLoadingSavePost: state.AppReducer.isLoadingSavePost
     }),
     createPostActions()
 )(CreatePostView);

@@ -24,7 +24,6 @@ export default class HomeView extends React.Component {
 
     getAllPosts() {
         const { account } = this.props;
-        console.log(account);
         this.props.getPostList(
             this.DPostIt.methods.listPosts().call({ from: account })
         );
