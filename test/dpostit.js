@@ -156,7 +156,7 @@ contract("DPostit", accounts => {
         );
     });
 
-    it("avoid to send coins if it is the owner", async () => {
+    it("avoid to send coins if already paid", async () => {
         await dpostitIntance.savePost(name, description, url, {
             from: secondAccount
         });
